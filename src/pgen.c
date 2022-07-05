@@ -1,0 +1,28 @@
+#include "inc.h"
+
+
+
+
+
+
+
+
+
+
+
+
+int main(int argc, char* argv[]) {
+
+	
+	
+//	char** x = str_match_all(argv[1], argv[2], "i");
+	char** x = str_match_all("azbbzccczd", ".z", "i");
+
+
+	strp_print(x, " > %s\n");
+//	printf("res: %d\n", x);
+
+}
+
+
+
