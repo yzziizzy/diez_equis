@@ -345,15 +345,17 @@ long strprefix(char* s, char* prefix) {
 
 // looks for regex inside /slashes/ 
 // returns the initial length of the regex
-long strrecognizeregex(char* s) {
-	if(*s != '/') return 0;
+long strrecognizeregex(char* s) { 
+	printf("starting regex: %c\n", *s);
+	if(*s != '/') return NULL;
 	
 	char* os = s; // save the original pointer
 	
+	s++; // skip the first slash
 	int parens = 0;
 	int in_brackets = 0;
 	
-	while(1) {
+	while(1) { printf("- %c\n", *s);
 		if(*s == '\\') { 
 			s++;
 			if(*s == 0) goto ESCAPED_NULL;
@@ -373,10 +375,11 @@ long strrecognizeregex(char* s) {
 				else goto UNBALANCED_PAREN;
 			}
 			
-			if(parens == 0 && *s == '/') break;
+			if(parens == 0 && *s == '/') { s++; break; }
 		
 			if(*s == '(') parens++;
 			if(*s == ')') parens--;
+			if(*s == '[') in_brackets = 1;
 			s++;
 			continue;
 		}
@@ -400,6 +403,37 @@ UNBALANCED_PAREN:
 	fprintf(stderr, "Unbalanced parenthesis in regular expression\n");
 	return 0;
 }
+
+
+// looks for C-style quoted strings 
+// returns the initial length of the string, including quotes
+long strrecognizestring(char* s) {
+	if(*s != '"') return 0;
+	
+	int escaped = 0;
+	char* os = s;
+	
+	s++; // skip the openeing quote
+	while(1) {
+		if(escaped) {
+			if(*s == 0) goto ESCAPED_NULL;
+			
+			escaped = 0;
+		}
+		else if(*s == '\\') escaped = 1;
+		else if(*s == '"') {
+			return s - os;
+		}
+		
+		s++;
+	}
+	
+ESCAPED_NULL:
+	fprintf(stderr, "Escaped NULL in string\n");
+	return 0;
+
+}
+
 
 
 #ifndef HAVE_STI
