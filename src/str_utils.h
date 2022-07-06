@@ -74,15 +74,29 @@ typedef unsigned long hash_t;
 hash_t strhash(char* str);
 hash_t strnhash(char* str, size_t n);
 
-// these use libpcre
+
+long strprefix(char* s, char* prefix);
+
+// looks for regex inside /slashes/ 
+// returns the initial length of the regex
+long strrecognizeregex(char* s);
+
+
+// libPCRE wrappers:
+
 int str_test(char* subject, char* pattern, char* opts);
 char** str_match_all(char* subject, char* pattern, char* opts);
 
+
 typedef struct {
-	pcre2_code* re;
+	pcre2_code* code;
+	pcre2_match_data* match;
 } re_t;
 
-
+re_t* re_compile(char* pattern, char* opts);
+void re_free(re_t* re);
+int re_test(re_t* re, char* subject);
+char* re_match_one(re_t* re, char* subject);
 
 
 #endif

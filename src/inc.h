@@ -23,9 +23,13 @@
 #include <pcre2.h>
 
 #include "sti/sti.h"
+#define HAVE_STI
+
 #include "str_utils.h"
 
+#include "parser.h"
 
 
+#define new(t, v) t v = calloc(1, sizeof(*v));
 
 

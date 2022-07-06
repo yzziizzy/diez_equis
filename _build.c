@@ -6,6 +6,7 @@
 
 
 char* sources[] = {
+	"parser.c",
 	"pgen.c",
 	"sti/sti.c",
 	"str_utils.c",
