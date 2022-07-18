@@ -6,7 +6,7 @@
 
 
 
-
+void parse_map();
 
 
 
@@ -25,7 +25,11 @@ int main(int argc, char* argv[]) {
 //	printf("\n %d \n", strcmp("struct", "struct {"));
 
 
-	parser_test("struct { int foo; float bar; }");
+//	parser_test("struct { int foo; float bar; }");
+
+	
+	parse_map();
+
 
 }
 

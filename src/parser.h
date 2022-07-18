@@ -14,6 +14,7 @@ void parser_test(char* input);
 
 
 enum {
+	NODE_UNKNOWN, // for reserved names without a definition yet
 	NODE_RE, // performs regex-based matching
 	NODE_STR,
 	NODE_ENUM,
@@ -29,6 +30,8 @@ enum {
 
 typedef struct node {
 	int type;
+	unsigned int ignore : 1;
+	
 	char* name;
 	
 	union {
@@ -80,10 +83,16 @@ void print_ast(ast_t* a);
 void free_ast(ast_t* a);
 
 
-#define EAT_WS 0x0001
+#define EAT_WS           0x0001
+#define TRIM_TEXT        0x0002
+#define COLLAPSE_TEXT_WS 0x0004
 ast_t* probe(node_t* n, char* input, int* offset, unsigned long opts);
 
 
+
+
+
+void dump_recognizer(ast_t* root);
 
 
 #endif // __diez_equis__parser_h__

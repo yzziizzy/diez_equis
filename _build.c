@@ -6,7 +6,9 @@
 
 
 char* sources[] = {
+	"map-test.c",
 	"parser.c",
+	"parser_n=1.c",
 	"pgen.c",
 	"sti/sti.c",
 	"str_utils.c",

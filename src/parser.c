@@ -35,6 +35,9 @@ char* grammar =
 "ws = /[\\s]+/ \n"
 
 "exp = ident\n"
+"exp = :regex_matcher\n"
+"exp = :string_matcher\n"
+"exp = :nl\n"
 "exp = \"?\" ident\n"
 "exp = \"+\" ident\n"
 "exp = \":\" ident\n"
@@ -135,6 +138,7 @@ void parser_test(char* input) {
 	printf("\n\n");
 	print_ast(a);
 	
+	dump_recognizer(a);
 	
 }
 
@@ -150,8 +154,24 @@ int is_flat_space(int c) {
 }
 
 
-// NULL on failure
+
+ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts);
+
+// wrapper to handle ignoring output
 ast_t* probe(node_t* n, char* input, int* offset, unsigned long opts) {
+	ast_t* a = real_probe(n, input, offset, opts);
+	if(a <= EMPTY_SUCCESS) return a;
+		
+	if(n->ignore) {
+		free_ast(a);
+		return EMPTY_SUCCESS;
+	}
+	
+	return a;
+}
+
+// NULL on failure
+ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 	if(input[*offset] == 0) return NULL;
 	
 	indent++;
@@ -178,6 +198,7 @@ ast_t* probe(node_t* n, char* input, int* offset, unsigned long opts) {
 		 
 		case NODE_STR: { 
 			int span = strprefix(input + *offset, n->str);
+			ind(); printf("executing string '%s' on '%.5s'\n", n->str, input + *offset);
 			if(span) {
 				ind(); printf("found string: '%.*s'\n", span, input + *offset);
 				a = mk_ast(AST_ITEM, n->name, input + *offset, span);

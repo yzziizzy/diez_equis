@@ -8,6 +8,7 @@ long strp_len(char** sp);
 long strp_total_len(char** sp);
 
 
+#define streq(x,y) (0 == strcmp((x), (y)))
 
 
 #define path_join(...) path_join_(PP_NARG(__VA_ARGS__), __VA_ARGS__)
