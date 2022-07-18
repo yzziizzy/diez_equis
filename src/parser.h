@@ -28,9 +28,22 @@ enum {
 	NODE_STRING_MATCHER, // identifies a double-quoted C-style string
 };
 
+
+#define NODE_CVT_INT64 ((void*)1)
+#define NODE_CVT_UINT64 ((void*)2)
+#define NODE_CVT_DOUBLE ((void*)3)
+#define NODE_CVT_FLOAT ((void*)4)
+
+struct node;
+struct ast;
+
+typedef void (*node_cvt_fn_t)(struct node*, struct ast*);
+
+
 typedef struct node {
 	int type;
-	unsigned int ignore : 1;
+	unsigned int opts;
+	node_cvt_fn_t cvt;
 	
 	char* name;
 	
@@ -41,7 +54,6 @@ typedef struct node {
 		VEC(struct node*) list;
 		VEC(char*) strings;
 	};
-	
 } node_t;
 
 
@@ -74,6 +86,16 @@ typedef struct ast {
 	
 	char* text;
 	VEC(struct ast*) kids;
+	
+	// converted value from node->cvt
+	union {
+		void* vp;
+		uint64_t u;
+		int64_t s;
+		double d;
+		float f;
+		char* str;
+	} value;
 } ast_t;
 
 
@@ -86,6 +108,8 @@ void free_ast(ast_t* a);
 #define EAT_WS           0x0001
 #define TRIM_TEXT        0x0002
 #define COLLAPSE_TEXT_WS 0x0004
+#define TEXT_TO_LOWER    0x0008
+#define IGNORE_OUTPUT    0x1000
 ast_t* probe(node_t* n, char* input, int* offset, unsigned long opts);
 
 

@@ -386,6 +386,11 @@ void strcollapsews_in_place(char* s) {
 
 
 
+void strtolower_in_place(char* s) {
+	while(*s) *s++ = tolower(*s);
+}
+
+
 // looks for regex inside /slashes/ 
 // returns the initial length of the regex
 long strrecognizeregex(char* s) { 

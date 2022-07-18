@@ -9,6 +9,7 @@ long strp_total_len(char** sp);
 
 
 #define streq(x,y) (0 == strcmp((x), (y)))
+#define streqi(x,y) (0 == strcasecmp((x), (y)))
 
 
 #define path_join(...) path_join_(PP_NARG(__VA_ARGS__), __VA_ARGS__)
@@ -80,6 +81,8 @@ void strtrimws_in_place(char* s);
 
 // collapses all whitespace to a single space. does not trim.
 void strcollapsews_in_place(char* s);
+
+void strtolower_in_place(char* s);
 
 
 // looks for regex inside /slashes/ 
