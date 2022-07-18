@@ -78,7 +78,7 @@ typedef struct ast {
 
 
 
-ast_t* mk_ast(char* type, char* name, char* text, size_t text_len);
+ast_t* mk_ast(char* type, char* name, char* text, size_t text_len, unsigned int opts);
 void print_ast(ast_t* a);
 void free_ast(ast_t* a);
 

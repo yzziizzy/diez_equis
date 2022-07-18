@@ -343,6 +343,49 @@ long strprefix(char* s, char* prefix) {
 	return i;
 }
 
+
+// trims all leading and trailing whitespace
+void strtrimws_in_place(char* s) {
+	size_t n = strspn(s, " \t\v\n\r");
+	size_t len = strlen(s + n);
+	
+	if(n) memmove(s, s + n, len + 1);
+	
+	char* e = s + len - 1;
+	while(e >= s && isspace(*e)) {
+		*e = 0;
+		e--;
+	}
+}
+
+// collapses all whitespace to a single space. does not trim.
+void strcollapsews_in_place(char* s) {
+	int was_space = 0;
+	char* write = s;
+	
+	while(*s) {
+		
+		if(isspace(*s)) {
+			if(!was_space) {
+				*write = ' ';
+				write++;
+				was_space = 1;
+			}
+		}
+		else {
+			was_space = 0;
+			*write = *s;
+			write++;
+		}
+		
+		s++;
+	}
+
+	*write = 0;
+}
+
+
+
 // looks for regex inside /slashes/ 
 // returns the initial length of the regex
 long strrecognizeregex(char* s) { 

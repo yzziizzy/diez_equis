@@ -201,7 +201,7 @@ ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 			ind(); printf("executing string '%s' on '%.5s'\n", n->str, input + *offset);
 			if(span) {
 				ind(); printf("found string: '%.*s'\n", span, input + *offset);
-				a = mk_ast(AST_ITEM, n->name, input + *offset, span);
+				a = mk_ast(AST_ITEM, n->name, input + *offset, span, opts);
 				*offset += span;
 				return a;
 			}
@@ -214,7 +214,7 @@ ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 				int span = strprefix(input + *offset, str);
 				if(span) {
 					ind(); printf("found string: '%.*s'\n", span, str);
-					a = mk_ast(AST_ITEM, n->name, str, span);
+					a = mk_ast(AST_ITEM, n->name, str, span, opts);
 					*offset += span;
 					return a;
 				}
@@ -227,7 +227,7 @@ ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 			char* s = re_match_one(n->re, input + *offset);
 			if(s) {
 				ind(); printf("found regex match: '%s'\n", s);
-				a = mk_ast(AST_ITEM, n->name, input + *offset, strlen(s));
+				a = mk_ast(AST_ITEM, n->name, input + *offset, strlen(s), opts);
 				*offset += strlen(s);
 				free(s);
 				return a;
@@ -241,7 +241,7 @@ ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 			int cnt = 0;
 			int off = *offset;
 			ast_t* aa;
-			a = mk_ast(AST_LIST, n->name, NULL, 0);
+			a = mk_ast(AST_LIST, n->name, NULL, 0, opts);
 			
 			while(1) {
 				if(input[off] == '\0') return NULL;
@@ -269,7 +269,7 @@ ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 		case NODE_STAR: {
 			int off = *offset;
 			ast_t* aa = NULL;
-			a = mk_ast(AST_LIST, n->name, NULL, 0);
+			a = mk_ast(AST_LIST, n->name, NULL, 0, opts);
 			
 			
 			ind(); printf("executing star\n");
@@ -294,7 +294,7 @@ ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 		case NODE_SEQ: {
 			int off = *offset;
 			ast_t* aa;
-			a = mk_ast(AST_LIST, n->name, NULL, 0);
+			a = mk_ast(AST_LIST, n->name, NULL, 0, opts);
 			
 			ind(); printf("executing sequence '%s'\n", n->name);
 			VEC_EACH(&n->list, lni, ln) {
@@ -331,7 +331,7 @@ ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 			ind(); printf("executing regex matcher\n");
 			int span = strrecognizeregex(input + *offset);
 			if(span) {
-				a = mk_ast(AST_ITEM, n->name, input + *offset + 1, span - 2);
+				a = mk_ast(AST_ITEM, n->name, input + *offset + 1, span - 2, opts);
 				*offset += span;
 				return a;
 			}
@@ -345,7 +345,7 @@ ast_t* real_probe(node_t* n, char* input, int* offset, unsigned long opts) {
 			if(span) {
 			span++;
 				printf("found string '%.*s'\n", span, input + *offset);
-				a = mk_ast(AST_ITEM, n->name, input + *offset + 1, span - 2);
+				a = mk_ast(AST_ITEM, n->name, input + *offset + 1, span - 2, opts);
 				*offset += span;
 				return a;
 			}
@@ -491,12 +491,21 @@ node_t* mk_string_matcher(char* name) {
 
 
 
-ast_t* mk_ast(char* type, char* name, char* text, size_t text_len) {
+ast_t* mk_ast(char* type, char* name, char* text, size_t text_len, unsigned int opts) {
 	new(ast_t*, a);
 	
 	a->type = type;
 	a->name = strdup(name);
 	a->text = strndup(text, text_len);
+	
+	if(opts & TRIM_TEXT) {
+		strtrimws_in_place(a->text);
+	}
+	
+	if(opts & COLLAPSE_TEXT_WS) {
+		strcollapsews_in_place(a->text);
+	}
+	
 	
 	return a;
 }

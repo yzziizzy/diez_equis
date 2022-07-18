@@ -135,7 +135,7 @@ void parse_map() {
 	
 	int off = 0;
 //	ast_t* a = probe(n_struct_decl, input, &off, EAT_WS);
-	ast_t* a = probe(n_root, src, &off, EAT_WS);
+	ast_t* a = probe(n_root, src, &off, EAT_WS | TRIM_TEXT | COLLAPSE_TEXT_WS);
 	free(src);
 	
 	print_ast(a);

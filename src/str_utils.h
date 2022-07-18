@@ -74,6 +74,14 @@ hash_t strnhash(char* str, size_t n);
 
 long strprefix(char* s, char* prefix);
 
+
+// trims all leading and trailing whitespace
+void strtrimws_in_place(char* s);
+
+// collapses all whitespace to a single space. does not trim.
+void strcollapsews_in_place(char* s);
+
+
 // looks for regex inside /slashes/ 
 // returns the initial length of the regex
 long strrecognizeregex(char* s);
