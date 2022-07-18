@@ -7,9 +7,9 @@
 
 char* sources[] = {
 	"map-test.c",
-	"parser.c",
-	"parser_n=1.c",
-	"pgen.c",
+	"parser/parser.c",
+	"parser/parser_n=1.c",
+	"parser/pgen.c",
 	"sti/sti.c",
 	"str_utils.c",
 	NULL,

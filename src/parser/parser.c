@@ -1,4 +1,4 @@
-#include "inc.h"
+#include "../inc.h"
 
 
 
@@ -68,6 +68,8 @@ typedef struct foo {
 } foo_t;
 
 */
+
+void dump_recognizer(ast_t* root);
 
 void parser_test(char* input) {
 	node_t* n_ident = mk_re("ident", "^[_a-z][_a-z0-9]*", "i");

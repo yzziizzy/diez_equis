@@ -115,8 +115,23 @@ ast_t* probe(node_t* n, char* input, int* offset, unsigned long opts);
 
 
 
+static inline node_t* nop(node_t* n) {
+	n->opts |= IGNORE_OUTPUT;
+	return n;
+}
 
-void dump_recognizer(ast_t* root);
+static inline node_t* low(node_t* n) {
+	n->opts |= TEXT_TO_LOWER;
+	return n;
+}
+
+static inline node_t* cvt(node_cvt_fn_t fn, node_t* n) {
+	n->cvt = fn;
+	return n;
+}
+
+
+//void dump_recognizer(ast_t* root);
 
 
 #endif // __diez_equis__parser_h__

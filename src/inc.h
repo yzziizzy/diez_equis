@@ -35,7 +35,7 @@
 
 #include "str_utils.h"
 
-#include "parser.h"
+#include "parser/parser.h"
 
 
 #define new(t, v) t v = calloc(1, sizeof(*v));

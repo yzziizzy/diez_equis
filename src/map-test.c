@@ -80,20 +80,6 @@ constraints_contents[rel>.type] = "north">.rel ?"of" name>.other_place :nl
 */
 
 
-node_t* nop(node_t* n) {
-	n->opts |= IGNORE_OUTPUT;
-	return n;
-}
-
-node_t* low(node_t* n) {
-	n->opts |= TEXT_TO_LOWER;
-	return n;
-}
-
-node_t* cvt(node_cvt_fn_t fn, node_t* n) {
-	n->cvt = fn;
-	return n;
-}
 
 
 #define I(v, n) VEC_ITEM(&((v)->kids), n)
